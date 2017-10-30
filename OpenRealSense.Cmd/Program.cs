@@ -31,6 +31,8 @@ namespace OpenRealSense.Cmd {
             var width = 640;
             var oneMeter = device.GetOneMeterValeForDepth();
 
+            // Clear buffer before resizing
+            Console.Clear();
 
             Console.BufferHeight = Console.WindowHeight = (height / 20 + 1) * 2 + 2;
             Console.BufferWidth = Console.WindowWidth = width / 10 + 2;
