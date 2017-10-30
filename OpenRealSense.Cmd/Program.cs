@@ -33,6 +33,7 @@ namespace OpenRealSense.Cmd {
 
             device.EnableStream(StreamType.Depth, width, height, FormatType.Z16, 30);
             device.StartInBackground(() => {
+                Console.CursorVisible = false;
                 var frameInBytes = device.GetFrameData(StreamType.Depth).Bytes;
                 using (var stream = new MemoryStream(frameInBytes)) {
                     using (var reader = new BinaryReader(stream)) {
@@ -62,6 +63,7 @@ namespace OpenRealSense.Cmd {
                 }
             });
             Console.ReadLine();
+            Console.CursorVisible = true;
             device.Stop();
         }
     }
