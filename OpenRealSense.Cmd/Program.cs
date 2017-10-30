@@ -31,43 +31,46 @@ namespace OpenRealSense.Cmd {
             var width = 640;
             var oneMeter = device.GetOneMeterValeForDepth();
 
-            Console.Clear();
+
             Console.BufferHeight = Console.WindowHeight = (height / 20 + 1) * 2 + 2;
             Console.BufferWidth = Console.WindowWidth = width / 10 + 2;
 
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.Clear();
+            Console.CursorVisible = false;
+
             device.EnableStream(StreamType.Infrared, width, height, FormatType.y16, 30);
             device.EnableStream(StreamType.Depth, width, height, FormatType.Z16, 30);
-            device.StartInBackground(() => {
-                Console.CursorVisible = false;
-                Console.CursorLeft = 0;
+
+            device.StartInBackground(() =>
+            {
                 Console.CursorTop = 0;
-
-                Console.WriteLine("IR:");
-
-                var frameInBytes = device.GetFrameData(StreamType.Infrared).Bytes;
-                using (var stream = new MemoryStream(frameInBytes)) {
-                    using (var reader = new BinaryReader(stream))
-                    {
-                        Render(height, width, oneMeter, reader);
-                    }
-                }
-
-                Console.CursorLeft = 0;
-                Console.WriteLine("Depth:");
-
-
-                frameInBytes = device.GetFrameData(StreamType.Depth).Bytes;
-                using (var stream = new MemoryStream(frameInBytes))
-                {
-                    using (var reader = new BinaryReader(stream))
-                    {
-                        Render(height, width, oneMeter, reader);
-                    }
-                }
+                
+                RenderFromStreamType(device, height, width, oneMeter, StreamType.Infrared);
+                RenderFromStreamType(device, height, width, oneMeter, StreamType.Depth);
             });
+
             Console.ReadLine();
             Console.CursorVisible = true;
+
             device.Stop();
+        }
+
+        private static void RenderFromStreamType(Device device, int height, int width, float oneMeter, StreamType streamType)
+        {
+            Console.CursorLeft = 0;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("{0}:", streamType.ToString());
+
+            Console.ForegroundColor = ConsoleColor.White;
+            var frameInBytes = device.GetFrameData(streamType).Bytes;
+            using (var stream = new MemoryStream(frameInBytes))
+            {
+                using (var reader = new BinaryReader(stream))
+                {
+                    Render(height, width, oneMeter, reader);
+                }
+            }
         }
 
         private static void Render(int height, int width, float oneMeter, BinaryReader reader)
