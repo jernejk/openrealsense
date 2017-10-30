@@ -55,7 +55,8 @@ namespace OpenRealSense.Cmd {
                             }
                         }
                         buffer[bufferIndex] = ' ';
-                        Console.WriteLine();
+                        Console.CursorLeft = 0;
+                        Console.CursorTop = 0;
                         Console.Write(buffer);
                     }
                 }
