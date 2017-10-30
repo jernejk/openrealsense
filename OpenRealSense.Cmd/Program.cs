@@ -43,6 +43,7 @@ namespace OpenRealSense.Cmd {
 
             device.EnableStream(StreamType.Infrared, width, height, FormatType.y16, 30);
             device.EnableStream(StreamType.Depth, width, height, FormatType.Z16, 30);
+            device.EnableStream(StreamType.Color, width, height, FormatType.bgr8, 30);
 
             device.StartInBackground(() =>
             {
